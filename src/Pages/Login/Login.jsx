@@ -1,7 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { loadCaptchaEnginge, LoadCanvasTemplate, validateCaptcha } from 'react-simple-captcha';
+import { AuthContext } from '../../providers/AuthProvider';
+import { Link } from 'react-router-dom';
+import photo from '../../assets/others/login-img.png';
 
 const Login = () => {
+    const { signIn } = useContext(AuthContext);
+
     const captchaRef = useRef(null);
     const [disabled, setDisabled] = useState(true);
 
@@ -15,16 +20,26 @@ const Login = () => {
         const email = form.email.value;
         const password = form.password.value;
         console.log(email, password);
+
+        // signIn user
+        signIn(email, password)
+            .then(result => {
+                const loggedUser = result.user;
+                console.log(loggedUser);
+            })
+            .catch(err => {
+                console.log(err.message);
+            })
     }
 
     // handle captcha
     const handleValidateCaptcha = () => {
         const user_captcha_value = captchaRef.current.value;
         // console.log(value);
-        if(validateCaptcha(user_captcha_value)){
+        if (validateCaptcha(user_captcha_value)) {
             setDisabled(false);
         }
-        else{
+        else {
             setDisabled(true);
         }
     }
@@ -33,11 +48,12 @@ const Login = () => {
         <div className="hero min-h-screen bg-base-200">
             <div className="hero-content grid grid-cols-1 md:grid-cols-2">
                 <div className="text-center">
-                    <h1 className="text-5xl font-bold">Login now!</h1>
-                    <p className="py-6">Provident cupiditate voluptatem et in. Quaerat fugiat ut assumenda excepturi exercitationem quasi. In deleniti eaque aut repudiandae et a id nisi.</p>
+                    <img src={photo} alt="" />
                 </div>
                 <div className="card w-full max-w-sm shadow-2xl bg-base-100">
                     <form onSubmit={handleLogin} className="card-body">
+                        <h1 className="text-3xl font-semibold text-center">Login Now!</h1>
+
                         <div className="form-control">
                             <label className="label">
                                 <span className="label-text">Email</span>
@@ -64,6 +80,7 @@ const Login = () => {
                             <input disabled={disabled} className="btn btn-primary" type="submit" value="Login" />
                         </div>
                     </form>
+                    <p className='text-center -mt-4 mb-4'>New here? <Link to="/signup">Create an account</Link></p>
                 </div>
             </div>
         </div>
