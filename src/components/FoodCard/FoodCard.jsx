@@ -19,15 +19,16 @@ const FoodCard = ({ item }) => {
     // Handle Add To Cart
     const handleAddToCart = item => {
         console.log(item);
-        const cartItem = {
-            foodId: _id,
-            name,
-            price,
-            image,
-            email: user.email
-        }
 
         if (user && user.email) {
+            const cartItem = {
+                foodId: _id,
+                name,
+                price,
+                image,
+                email: user.email
+            }
+
             // send this item to the server
             fetch('http://localhost:5000/carts', {
                 method: 'POST',
