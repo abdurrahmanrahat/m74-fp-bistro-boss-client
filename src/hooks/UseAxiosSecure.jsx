@@ -23,8 +23,7 @@ const useAxiosSecure = () => {
             return config;
         });
 
-        axiosSecure.interceptors.response.use(
-            (response) => response,
+        axiosSecure.interceptors.response.use((response) => response,
             async (error) => {
                 if (error.response && (error.response.status === 401 || error.response.status === 403)) {
                     await logOut();
@@ -33,6 +32,7 @@ const useAxiosSecure = () => {
                 return Promise.reject(error);
             }
         );
+        
     }, [logOut, navigate]);
 
     return [axiosSecure];
